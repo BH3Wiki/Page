@@ -34,6 +34,7 @@
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+					<li class="nav-item"><a href="MeasureTable.html" class="nav-link">Table</a></li>
 					<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
 					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 				</ul>
@@ -83,10 +84,10 @@
 				</div>
 			</div>
 			<div class="row d-flex text-center" style="align-self:center;">
-				<div class="col-md-3 d-flex align-self-stretch ftco-animate btn">
+				<div class="col-md-3 d-flex align-self-stretch ftco-animate btn"  onclick="location.href='MeasureTable.html'">>
 					<div class="media block-6 services d-block text-center">
 						<div class="icon d-flex justify-content-center align-items-center" style="margin:auto;">
-							<i class="material-icons" style="font-size:50px;color:purple;">bar_chart</i><br/>
+							<i class="material-icons" style="font-size:50px;color:purple;">bar_chart</i><br />
 						</div>
 						<div class="media-body py-md-4">
 							<h3>Z大度量表</h3>
@@ -96,7 +97,7 @@
 				</div>
 				<div class="col-md-3 d-flex align-self-stretch ftco-animate btn">
 					<div class="media block-6 services d-block text-center">
-						<div class="icon d-flex justify-content-center align-items-center"  style="margin:auto;">
+						<div class="icon d-flex justify-content-center align-items-center" style="margin:auto;">
 							<i class="material-icons" style="font-size:50px;color:purple;">data_usage</i><br />
 						</div>
 						<div class="media-body py-md-4">
@@ -116,7 +117,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3 d-flex align-self-stretch ftco-animate btn">
+				<div class="col-md-3 d-flex align-self-stretch ftco-animate btn ">
 					<div class="media block-6 services d-block text-center">
 						<div class="icon d-flex justify-content-center align-items-center" style="margin:auto;">
 							<i class="material-icons" style="font-size:50px;color:purple;">build</i><br />
@@ -202,6 +203,8 @@
 <script>
 	var app = angular.module('App', []);
 	app.controller('AppController', function ($scope, $http) {
+		$scope.GoTo = function (where) {
 
+		}
 	})
 </script>
