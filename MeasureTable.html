@@ -63,10 +63,10 @@
 		<div class="container">
 			<div class="row no-gutters">
 				<!--Table-->
-				<div class="col-md-9 p-md-5 justify-content-center align-items-center">
-					<table border="1">
+				<div class="col-md-9 p-md-5 justify-content-center align-items-center table-wrapper-scroll-y my-custom-scrollbar">
+					<table class="table table-bordered table-striped mb-0">
 						<tr ng-repeat="data in WeaponDataList">
-							<td ng-repeat="x in data" ng-bind="x"></td>
+							<td ng-repeat="x in data track by $index" ng-bind="x"></td>
 						<tr>
 					</table>
 				</div>
@@ -77,8 +77,8 @@
 					</div>
 				</div>-->
 				<!--簡評-->
-				<div class="col-md-3 wrap-about py-md-5 ftco-animate">
-					<div class="heading-section p-md-5">
+				<div class="col-md-3">
+					<div class="heading-section p-md-5 text-center">
 						<h2 class="mb-4">本周簡評</h2>
 						<p>test</p>
 					</div>
@@ -186,3 +186,14 @@
 	</script>
 </body>
 </html>
+<style>
+	.my-custom-scrollbar {
+		position: relative;
+		height: 400px;
+		overflow: auto;
+	}
+
+	.table-wrapper-scroll-y {
+		display: block;
+	}
+</style>
