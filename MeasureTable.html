@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="css/flaticon.css">
 	<link rel="stylesheet" href="css/icomoon.css">
 	<link rel="stylesheet" href="css/style.css">
+
 </head>
 <body ng-app="App" ng-controller="AppController" ng-init="GetValue()">
 
@@ -53,10 +54,14 @@
 	</section>
 	<section class="ftco-section ftco-no-pb">
 		<!--按鈕區分精準AB-->
-		<div class="row text-center">
+		<div class="row text-center" ng-init="ShowPieSw = false;">
 			<div class="col-md-12">
-				<button class="btn btn-primary" style="margin:auto;" ng-click="">精準A</button>
-				<button class="btn btn-primary" style="margin:auto;" ng-click="">精準B</button>
+				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="">精準A</button>
+				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="">精準B</button>
+				<button ng-if="!ShowPie();" class="btn btn-primary Margin-L" style="width:12%;" ng-click="ShowPieSw=!ShowPieSw;">圓餅圖</button>
+				<button ng-if="ShowPie();"  class="btn btn-primary Margin-L" style="width:12%;" ng-click="ShowPieSw=!ShowPieSw;">簡評</button>
+				<input type="range" min="1" max="10" class="slider Margin-L" id="myRange" ng-change="TableSize_Controller($event)" ng-model="SliderValue" title="{{SliderValue}}">
+				<font class="Margin-L">表格大小</font>
 			</div>
 		</div>
 		<!--圖表及簡評-->
@@ -66,18 +71,20 @@
 				<div class="col-md-9 p-md-5 justify-content-center align-items-center table-wrapper-scroll-y my-custom-scrollbar">
 					<table class="table table-bordered table-striped mb-0">
 						<tr ng-repeat="data in WeaponDataList">
-							<td ng-repeat="x in data track by $index" ng-bind="x"></td>
+							<td ng-style="TdStyle" ng-repeat="x in data track by $index">
+								<font size="{{TableTextSize}}">{{x}}</font>
+							</td>
 						<tr>
 					</table>
 				</div>
 				<!--餅圖-->
-				<!--<div class="col-md-6 p-md-5 justify-content-center align-items-center">
+				<div ng-if="ShowPie()" class="col-md-3">
 					<div id="canvasDiv" style="width:400px;height:400px">
 						<canvas id="canvas"></canvas>
 					</div>
-				</div>-->
+				</div>
 				<!--簡評-->
-				<div class="col-md-3">
+				<div ng-if="!ShowPie()" class="col-md-3">
 					<div class="heading-section p-md-5 text-center">
 						<h2 class="mb-4">本周簡評</h2>
 						<p>test</p>
@@ -158,8 +165,14 @@
 	<script src="Scripts/Angular/angular.min.js"></script>
 	<script src="Scripts/Table/PieCavans.js"></script>
 	<script>
+
 		var app = angular.module('App', []);
 		app.controller('AppController', function ($scope, $http) {
+			$scope.SliderValue = 4;
+
+			$scope.ShowPie = function () {
+				return $scope.ShowPieSw;
+			};
 			function GetSheetAPI() {
 				var GoogleSheetApi = "https://sheets.googleapis.com/v4/spreadsheets/";
 				var SheetID = "1tcLNWOUrk22UjwtDPTRwviDwHUMkDQYTvAFrRp_kzP4";
@@ -180,20 +193,57 @@
 				}).catch(function error(data) {
 					$scope.WeaponDataList = [];
 				})
-				console.log($scope.WeaponDataList);
 			}
+			$scope.TableSize_Controller = function () {
+				$scope.TdStyle = { 'Height': $scope.SliderValue * 5 };
+				$scope.TableTextSize = $scope.SliderValue;
+			}
+
 		})
 	</script>
 </body>
 </html>
 <style>
+	.slider {
+		-webkit-appearance: none;
+		width: 30%;
+		height: 10px;
+		border-radius: 5px;
+		background: #d3d3d3;
+		outline: none;
+		opacity: 0.7;
+		-webkit-transition: .2s;
+		transition: opacity .2s;
+	}
+
+		.slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background: #4CAF50;
+			cursor: pointer;
+		}
+
+		.slider::-moz-range-thumb {
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background: #4CAF50;
+			cursor: pointer;
+		}
+
 	.my-custom-scrollbar {
 		position: relative;
-		height: 400px;
+		height: 420px;
 		overflow: auto;
 	}
 
 	.table-wrapper-scroll-y {
 		display: block;
+	}
+	.Margin-L{
+		margin-left:10px;
 	}
 </style>
