@@ -54,12 +54,12 @@
 	</section>
 	<section class="ftco-section ftco-no-pb">
 		<!--按鈕區分精準AB-->
-		<div class="row text-center" ng-init="ShowPieSw = false;">
+		<div class="row text-center">
 			<div class="col-md-12">
-				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="">精準A</button>
-				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="">精準B</button>
-				<button ng-if="!ShowPie();" class="btn btn-primary Margin-L" style="width:12%;" ng-click="ShowPieSw=!ShowPieSw;">圓餅圖</button>
-				<button ng-if="ShowPie();"  class="btn btn-primary Margin-L" style="width:12%;" ng-click="ShowPieSw=!ShowPieSw;">簡評</button>
+				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwitchPrecision('A')">精準A</button>
+				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwitchPrecision('B')">精準B</button>
+				<button ng-if="!ShowPie();" class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwPieVar()">圓餅圖</button>
+				<button ng-if="ShowPie();" class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwPieVar()">簡評</button>
 				<input type="range" min="1" max="10" class="slider Margin-L" id="myRange" ng-change="TableSize_Controller($event)" ng-model="SliderValue" title="{{SliderValue}}">
 				<font class="Margin-L">表格大小</font>
 			</div>
@@ -70,24 +70,29 @@
 				<!--Table-->
 				<div class="col-md-9 p-md-5 justify-content-center align-items-center table-wrapper-scroll-y my-custom-scrollbar">
 					<table class="table table-bordered table-striped mb-0">
-						<tr ng-repeat="data in WeaponDataList">
+						<tr ng-if="PrecisionType=='A'" ng-repeat="data in WeaponDataList_A">
 							<td ng-style="TdStyle" ng-repeat="x in data track by $index">
 								<font size="{{TableTextSize}}">{{x}}</font>
 							</td>
-						<tr>
+						</tr>
+						<tr ng-if="PrecisionType=='B'" ng-repeat="data in WeaponDataList_B">
+							<td ng-style="TdStyle" ng-repeat="x in data track by $index">
+								<font size="{{TableTextSize}}">{{x}}</font>
+							</td>
+						</tr>
 					</table>
 				</div>
 				<!--餅圖-->
 				<div ng-if="ShowPie()" class="col-md-3">
-					<div id="canvasDiv" style="width:400px;height:400px">
+					<div id="canvasDiv" style="width:400px;height:400px" >
 						<canvas id="canvas"></canvas>
 					</div>
 				</div>
 				<!--簡評-->
 				<div ng-if="!ShowPie()" class="col-md-3">
-					<div class="heading-section p-md-5 text-center">
+					<div class="heading-section p-md-3 text-center">
 						<h2 class="mb-4">本周簡評</h2>
-						<p>test</p>
+						<p>{{Description_week()}}</p>
 					</div>
 				</div>
 			</div>
@@ -164,41 +169,84 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 	<script src="Scripts/Angular/angular.min.js"></script>
 	<script src="Scripts/Table/PieCavans.js"></script>
+	<script src="Scripts/Loading.js"></script>
 	<script>
-
 		var app = angular.module('App', []);
 		app.controller('AppController', function ($scope, $http) {
 			$scope.SliderValue = 4;
-
+			$scope.PrecisionType = 'A';
+			$scope.SwPieVar = function () {
+				$scope.ShowPieSw = !$scope.ShowPieSw;
+			}
 			$scope.ShowPie = function () {
+				if ($scope.ShowPieSw == null) {
+					$scope.ShowPieSw = false;
+				}
 				return $scope.ShowPieSw;
 			};
-			function GetSheetAPI() {
+			function SetSheetRangeReturnAPI(range) {
 				var GoogleSheetApi = "https://sheets.googleapis.com/v4/spreadsheets/";
-				var SheetID = "1tcLNWOUrk22UjwtDPTRwviDwHUMkDQYTvAFrRp_kzP4";
-				var SheetRange = "weapon";
+				var SheetID = "1ZTldkLA36q6eDyjryIywD1AeCUCCc6GpVTz9HpPz1ZE";
 				var SheetOption = "FORMATTED_VALUE";
 				var API_Key = 'AIzaSyARaYxancFF0CsCSdM5Roxv9nOOXHpN5dc';
-				var str = GoogleSheetApi + SheetID + "/values/" + SheetRange + "?valueRenderOption=" + SheetOption + "&key=" + API_Key;
+				var str = GoogleSheetApi + SheetID + "/values/" + range + "?valueRenderOption=" + SheetOption + "&key=" + API_Key;
 				return str;
 			}
 			$scope.GetValue = function () {
-				var url = GetSheetAPI();
+				ShowProgressBar();
+				//#region 撈取AB池精準
+				var SheetRange = "精準UP!B2:D10";
+				var url = SetSheetRangeReturnAPI(SheetRange);
 				var req = {
 					method: 'GET',//请求的方式
 					url: url,//请求的地址
 				}
 				$http(req).then(function success(data) {
-					$scope.WeaponDataList = data.data.values;
+					$scope.WeaponDataList_A = data.data.values;
 				}).catch(function error(data) {
-					$scope.WeaponDataList = [];
+					$scope.WeaponDataList_A = [];
 				})
+				var SheetRange = "精準UP!F2:H10";
+				var url = SetSheetRangeReturnAPI(SheetRange);
+				var req = {
+					method: 'GET',//请求的方式
+					url: url,//请求的地址
+				}
+				$http(req).then(function success(data) {
+					$scope.WeaponDataList_B = data.data.values;
+				}).catch(function error(data) {
+					$scope.WeaponDataList_B = [];
+				})
+
+
+				//#endregion
+				//#region 撈取wiki評分
+				var SheetRange = "WIKI評分!B2:W43";
+				var url = SetSheetRangeReturnAPI(SheetRange);
+				var req = {
+					method: 'GET',//请求的方式
+					url: url,//请求的地址
+				}
+				$http(req).then(function success(data) {
+					$scope.WeaponDataList_A = data.data.values;
+				}).catch(function error(data) {
+					$scope.WeaponDataList_A = [];
+				})
+				//#endregion
+				HideProgressBar();
 			}
 			$scope.TableSize_Controller = function () {
 				$scope.TdStyle = { 'Height': $scope.SliderValue * 5 };
 				$scope.TableTextSize = $scope.SliderValue;
 			}
-
+			$scope.SwitchPrecision = function (type) {
+				switch (type) {
+					case 'A': $scope.PrecisionType = 'A';
+						break;
+					case 'B': $scope.PrecisionType = 'B';
+						break;
+				}
+			}
 		})
 	</script>
 </body>
