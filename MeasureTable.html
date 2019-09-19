@@ -442,6 +442,13 @@
 					},
 				});
 			}
+			var Check = setTimeout(ReGetApi, 1000);
+			function ReGetApi() {
+				if ($scope.EvaluateTable.length == 0)
+					$scope.GetEvaluateTable('A');
+				else
+					clearTimeout(Check);
+			}
 		})
 	</script>
 </body>
