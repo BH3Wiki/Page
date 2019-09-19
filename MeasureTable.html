@@ -63,10 +63,10 @@
 			</div>
 		</div>
 		<!--圖表及簡評-->
-		<div class="container">
+		<div class="container" style="margin-top:20px;">
 			<div class="row no-gutters">
 				<!--Table-->
-				<div class="col-md-6 p-md-5 justify-content-center align-items-center">
+				<div class="col-md-6 p-md-5 justify-content-center align-items-center text-center">
 					<!--普通表-->
 					<table class="table table-bordered table-striped">
 						<tr ng-if="PrecisionType=='A'" ng-repeat="data in WeaponDataList_A" style="background-color:{{UpColor($index)}};">
@@ -87,8 +87,8 @@
 						</tr>
 					</table>
 					<!--餅圖-->
-					<div class="col-md-6">
-						<div id="canvasDiv" style="width:600px;height:600px">
+					<div class="text-center">
+						<div id="canvasDiv" style="width:600px;height:600px;margin:auto;">
 							<canvas id="canvas"></canvas>
 						</div>
 					</div>
@@ -386,6 +386,11 @@
 				DataArray.push("C (25~40)：手癢也不太建議抽");
 				DataArray.push("D (<25%)：毒池一個，省鑽周");
 				$scope.EvaluationScore = DataArray;
+				var arr = [-1,25,40,55,70,100];			
+				for (var i = 0; i < arr.length; i++) {
+					if ($scope.Score > arr[i] && $scope.Score < arr[i + 1])
+						$scope.ColorIndex = arr.length-i;
+				}
 			}
 			$scope.TableSize_Controller = function () {
 				$scope.TdStyle = { 'Height': $scope.SliderValue * 5 };
@@ -396,7 +401,8 @@
 					return 'aqua';
 			}
 			$scope.ScoreColor = function (index) {
-				
+				if($scope.ColorIndex ==index)
+					return 'aqua';
 			}
 			$scope.SwitchPrecision = function (type) {
 				switch (type) {
