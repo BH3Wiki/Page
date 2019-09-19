@@ -21,7 +21,7 @@
 	<link rel="stylesheet" href="css/style.css">
 
 </head>
-<body ng-app="App" ng-controller="AppController" ng-init="GetValue()">
+<body ng-app="App" ng-controller="AppController" ng-init="GetValue();">
 
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 		<div class="container">
@@ -58,8 +58,6 @@
 			<div class="col-md-12">
 				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwitchPrecision('A')">精準A</button>
 				<button class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwitchPrecision('B')">精準B</button>
-				<button ng-if="!ShowPie();" class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwPieVar()">圓餅圖</button>
-				<button ng-if="ShowPie();" class="btn btn-primary Margin-L" style="width:12%;" ng-click="SwPieVar()">簡評</button>
 				<input type="range" min="1" max="10" class="slider Margin-L" id="myRange" ng-change="TableSize_Controller($event)" ng-model="SliderValue" title="{{SliderValue}}">
 				<font class="Margin-L">表格大小</font>
 			</div>
@@ -68,31 +66,36 @@
 		<div class="container">
 			<div class="row no-gutters">
 				<!--Table-->
-				<div class="col-md-9 p-md-5 justify-content-center align-items-center table-wrapper-scroll-y my-custom-scrollbar">
-					<table class="table table-bordered table-striped mb-0">
-						<tr ng-if="PrecisionType=='A'" ng-repeat="data in WeaponDataList_A">
+				<div class="col-md-6 p-md-5 justify-content-center align-items-center">
+					<table class="table table-bordered table-striped">
+						<tr ng-if="PrecisionType=='A'" ng-repeat="data in WeaponDataList_A" style="background-color:{{UpColor($index)}};">
 							<td ng-style="TdStyle" ng-repeat="x in data track by $index">
 								<font size="{{TableTextSize}}">{{x}}</font>
 							</td>
 						</tr>
-						<tr ng-if="PrecisionType=='B'" ng-repeat="data in WeaponDataList_B">
+						<tr ng-if="PrecisionType=='B'" ng-repeat="data in WeaponDataList_B" style="background-color:{{UpColor($index)}};">
 							<td ng-style="TdStyle" ng-repeat="x in data track by $index">
 								<font size="{{TableTextSize}}">{{x}}</font>
 							</td>
 						</tr>
 					</table>
 				</div>
-				<!--餅圖-->
-				<div ng-if="ShowPie()" class="col-md-3">
-					<div id="canvasDiv" style="width:400px;height:400px" >
-						<canvas id="canvas"></canvas>
-					</div>
+				<!--詳細大表-->
+				<div class="col-md-6 p-md-5 justify-content-center align-items-center">
+					<table class="table table-bordered table-striped">
+						<tr ng-repeat="data in EvaluateTable track by $index">
+							<td ng-repeat="x in data track by $index">
+								<font size="{{TableTextSize}}">{{x}}</font>
+							</td>
+						</tr>
+					</table>
 				</div>
-				<!--簡評-->
-				<div ng-if="!ShowPie()" class="col-md-3">
-					<div class="heading-section p-md-3 text-center">
-						<h2 class="mb-4">本周簡評</h2>
-						<p>{{Description_week()}}</p>
+			</div>
+			<div class="row no-gutters">
+				<!--餅圖-->
+				<div ng-if="ShowType=='PieBar'" class="col-md-6">
+					<div id="canvasDiv" style="width:400px;height:400px">
+						<canvas id="canvas"></canvas>
 					</div>
 				</div>
 			</div>
@@ -178,12 +181,9 @@
 			$scope.SwPieVar = function () {
 				$scope.ShowPieSw = !$scope.ShowPieSw;
 			}
-			$scope.ShowPie = function () {
-				if ($scope.ShowPieSw == null) {
-					$scope.ShowPieSw = false;
-				}
-				return $scope.ShowPieSw;
-			};
+			$scope.ShowTable = function (type) {
+				$scope.ShowType = type;
+			}
 			function SetSheetRangeReturnAPI(range) {
 				var GoogleSheetApi = "https://sheets.googleapis.com/v4/spreadsheets/";
 				var SheetID = "1ZTldkLA36q6eDyjryIywD1AeCUCCc6GpVTz9HpPz1ZE";
@@ -202,7 +202,7 @@
 					url: url,//请求的地址
 				}
 				$http(req).then(function success(data) {
-					$scope.WeaponDataList_A = data.data.values;
+					$scope.WeaponDataList_A = data.data.values;					
 				}).catch(function error(data) {
 					$scope.WeaponDataList_A = [];
 				})
@@ -220,30 +220,161 @@
 
 
 				//#endregion
-				//#region 撈取wiki評分
-				var SheetRange = "WIKI評分!B2:W43";
-				var url = SetSheetRangeReturnAPI(SheetRange);
-				var req = {
-					method: 'GET',//请求的方式
-					url: url,//请求的地址
+				//#region 撈取wiki各種評分
+				var SheetRange = ["WIKI評分!B2:C22", "WIKI評分!E2:F22", "WIKI評分!H2:I22", "WIKI評分!K2:L22",
+								  "WIKI評分!B23:C43", "WIKI評分!E23:F43", "WIKI評分!H23:I43",
+								  "WIKI評分!N2:Q43", "WIKI評分!S2:V43", ];
+				$scope.WikiLength = SheetRange.length;
+				$scope.WikiDataList = [];
+				var tmpCount = 0;
+				for (var i = 0; i < $scope.WikiLength; i++) {
+					var url = SetSheetRangeReturnAPI(SheetRange[i]);
+					var req = {
+						method: 'GET',//请求的方式
+						url: url,//请求的地址
+					}
+					$http(req).then(function success(data) {
+						tmpCount++;
+						$scope.WikiDataList.push(data.data.values);
+						if(tmpCount ==$scope.WikiLength)
+							$scope.GetEvaluateTable('A');
+					}).catch(function error(data) {
+						$scope.WikiDataList[i] = [];
+					})
 				}
-				$http(req).then(function success(data) {
-					$scope.WeaponDataList_A = data.data.values;
-				}).catch(function error(data) {
-					$scope.WeaponDataList_A = [];
-				})
-				//#endregion
 				HideProgressBar();
+				
+				//#endregion
+					
+			}
+			$scope.GetEvaluateTable = function (type) {
+				switch(type){
+					case 'A': CalEvaluateTable($scope.WeaponDataList_A);
+						break;
+					case 'B': CalEvaluateTable($scope.WeaponDataList_B);
+						break;
+				}
+				function CalEvaluateTable(Data) {
+					var BestEquipRegex = /泛用/;
+					var UniqueEquipRegex = /專屬/;
+					var WorseEquipRegex = /炸裂/;
+					$scope.BestEquipTable = [];
+					$scope.UniqueEquipTable = [];
+					$scope.WorseEquipTable = [];
+					$scope.Probability_BestEquip = 0;
+					$scope.Probability_UniqueEquip = 0;
+					$scope.Probability_WorseEquip = 0;
+					$scope.EvaluateTable = [];
+					$scope.UpWeapon = "";
+					$scope.UpStigmata = "";
+					
+					for (var index = 2; index < Data.length; index++) {
+						$scope.UpWeapon = Data[2][1];
+						$scope.UpStigmata = Data[2][2];					
+						for (var i = 0; i < $scope.WikiDataList.length; i++) {
+							//#region 先處理武器
+							if (Data[index][0] == $scope.WikiDataList[i][0][0]) {							
+								for (var j = 1; j < $scope.WikiDataList[i].length; j++) {
+									if (Data[index][1] == $scope.WikiDataList[i][j][0]) {
+										//console.log($scope.WikiDataList[i][0][0] + "  " + $scope.WikiDataList[i][j][0] + "  " + $scope.WikiDataList[i][j][1]);
+										var Probability = "3.3%";
+										if ($scope.WikiDataList[i][j][0] == $scope.UpWeapon)
+											Probability = "20%";
+										var tmp = [$scope.WikiDataList[i][j][0], Probability];
+
+										if (BestEquipRegex.test($scope.WikiDataList[i][j][1])) {
+											$scope.BestEquipTable.push(tmp);
+										}
+										if (UniqueEquipRegex.test($scope.WikiDataList[i][j][1])) {
+											$scope.UniqueEquipTable.push(tmp);
+										}
+										if (WorseEquipRegex.test($scope.WikiDataList[i][j][1])) {
+											$scope.WorseEquipTable.push(tmp);
+										}
+										break;
+									}
+								}								
+							}
+							//#endregion
+							//#region 處理聖痕
+							if ($scope.WikiDataList[i][0][0] == "聖痕") {
+								for (var j = 1; j < $scope.WikiDataList[i].length; j++) {
+									if (Data[index][2] == $scope.WikiDataList[i][j][0]) {
+										console.log($scope.WikiDataList[i][0][0] + "  " + $scope.WikiDataList[i][j][0] + "  " + $scope.WikiDataList[i][j][1]+"  " + $scope.WikiDataList[i][j][2]+"  " + $scope.WikiDataList[i][j][3]);
+										var Probability = "2.5%";
+										for (var k = 1; k <= 3; k++) {
+											var Evaluation = $scope.WikiDataList[i][j][k];
+											if (Evaluation == $scope.UpStigmata)
+												Probability = "10%";
+											var Part;
+											switch (k) {
+												case 1:
+													Part = "(上)";
+													break;
+												case 2:
+													Part = "(中)";
+													break;
+												case 3:
+													Part = "(下)";
+													break;
+											}
+											var tmp = [$scope.WikiDataList[i][j][0]+Part, Probability];
+
+											if (BestEquipRegex.test(Evaluation)) {
+												$scope.BestEquipTable.push(tmp);
+											}
+											if (UniqueEquipRegex.test(Evaluation)) {
+												$scope.UniqueEquipTable.push(tmp);
+											}
+											if (WorseEquipRegex.test(Evaluation)) {
+												$scope.WorseEquipTable.push(tmp);
+											}
+										}
+										break;
+									}
+								}
+							}
+							//#endregion
+						}
+					}
+					var MaxLength = Math.max($scope.BestEquipTable.length, $scope.UniqueEquipTable.length, $scope.WorseEquipTable.length);					
+					for (var i = 0; i < MaxLength; i++) {
+						//var Tmp = [$scope.BestEquipTable[i], $scope.UniqueEquipTable[i], $scope.WorseEquipTable[i]];
+						var Tmp = [];
+						if ($scope.BestEquipTable[i] != null)
+							Tmp = Tmp.concat($scope.BestEquipTable[i]);
+						else
+							Tmp = Tmp.concat("","");
+						if ($scope.UniqueEquipTable[i] != null)
+							Tmp = Tmp.concat($scope.UniqueEquipTable[i]);
+						else
+							Tmp = Tmp.concat("","");
+						if ($scope.WorseEquipTable[i] !=null)
+							Tmp = Tmp.concat($scope.WorseEquipTable[i]);
+						else
+							Tmp = Tmp.concat("","");
+
+						$scope.EvaluateTable.push(Tmp);
+					}
+					var Tmp = ["泛用", "機率", "專屬", "機率", "炸裂", "機率"];
+					$scope.EvaluateTable.unshift(Tmp);
+				}
 			}
 			$scope.TableSize_Controller = function () {
 				$scope.TdStyle = { 'Height': $scope.SliderValue * 5 };
 				$scope.TableTextSize = $scope.SliderValue;
 			}
+			$scope.UpColor = function (index) {
+				if (index == 2)
+					return 'aqua';
+			}
 			$scope.SwitchPrecision = function (type) {
 				switch (type) {
 					case 'A': $scope.PrecisionType = 'A';
+						$scope.GetEvaluateTable('A');
 						break;
 					case 'B': $scope.PrecisionType = 'B';
+						$scope.GetEvaluateTable('B');
 						break;
 				}
 			}
@@ -251,47 +382,3 @@
 	</script>
 </body>
 </html>
-<style>
-	.slider {
-		-webkit-appearance: none;
-		width: 30%;
-		height: 10px;
-		border-radius: 5px;
-		background: #d3d3d3;
-		outline: none;
-		opacity: 0.7;
-		-webkit-transition: .2s;
-		transition: opacity .2s;
-	}
-
-		.slider::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			appearance: none;
-			width: 25px;
-			height: 25px;
-			border-radius: 50%;
-			background: #4CAF50;
-			cursor: pointer;
-		}
-
-		.slider::-moz-range-thumb {
-			width: 25px;
-			height: 25px;
-			border-radius: 50%;
-			background: #4CAF50;
-			cursor: pointer;
-		}
-
-	.my-custom-scrollbar {
-		position: relative;
-		height: 420px;
-		overflow: auto;
-	}
-
-	.table-wrapper-scroll-y {
-		display: block;
-	}
-	.Margin-L{
-		margin-left:10px;
-	}
-</style>
