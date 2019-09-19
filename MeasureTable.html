@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ch">
 <head>
-	<meta charset="utf-8">
+	<meta charset="big5">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900&display=swap" rel="stylesheet">
@@ -67,6 +67,7 @@
 			<div class="row no-gutters">
 				<!--Table-->
 				<div class="col-md-6 p-md-5 justify-content-center align-items-center">
+					<!--普通表-->
 					<table class="table table-bordered table-striped">
 						<tr ng-if="PrecisionType=='A'" ng-repeat="data in WeaponDataList_A" style="background-color:{{UpColor($index)}};">
 							<td ng-style="TdStyle" ng-repeat="x in data track by $index">
@@ -79,7 +80,20 @@
 							</td>
 						</tr>
 					</table>
+					<!--評價分數建議表-->
+					<table class="table table-bordered table-striped text-center">
+						<tr ng-repeat="x in EvaluationScore" style="margin:auto;background-color:{{ScoreColor($index)}}">
+							<td>{{x}}</td>
+						</tr>
+					</table>
+					<!--餅圖-->
+					<div class="col-md-6">
+						<div id="canvasDiv" style="width:600px;height:600px">
+							<canvas id="canvas"></canvas>
+						</div>
+					</div>
 				</div>
+
 				<!--詳細大表-->
 				<div class="col-md-6 p-md-5 justify-content-center align-items-center">
 					<table class="table table-bordered table-striped">
@@ -89,14 +103,6 @@
 							</td>
 						</tr>
 					</table>
-				</div>
-			</div>
-			<div class="row no-gutters">
-				<!--餅圖-->
-				<div ng-if="ShowType=='PieBar'" class="col-md-6">
-					<div id="canvasDiv" style="width:400px;height:400px">
-						<canvas id="canvas"></canvas>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -139,7 +145,7 @@
 						<h2 class="ftco-heading-2">Have a Questions?</h2>
 						<div class="block-23 mb-3">
 							<ul>
-								<li><a href="#"><span class="icon icon-map-marker"></span><span class="text">�x�_��</span></a></li>
+								<li><a href="#"><span class="icon icon-map-marker"></span><span class="text">台北市</span></a></li>
 								<li><a href="#"><span class="icon icon-phone"></span><span class="text">+09XX-XXX-XXX</span></a></li>
 								<li><a href="#"><span class="icon icon-envelope pr-4"></span><span class="text">samamy888@gmail..com</span></a></li>
 							</ul>
@@ -171,16 +177,12 @@
 	<script src="js/main.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 	<script src="Scripts/Angular/angular.min.js"></script>
-	<script src="Scripts/Table/PieCavans.js"></script>
 	<script src="Scripts/Loading.js"></script>
-	<script>
+	<script charset="big5">
 		var app = angular.module('App', []);
 		app.controller('AppController', function ($scope, $http) {
 			$scope.SliderValue = 4;
 			$scope.PrecisionType = 'A';
-			$scope.SwPieVar = function () {
-				$scope.ShowPieSw = !$scope.ShowPieSw;
-			}
 			$scope.ShowTable = function (type) {
 				$scope.ShowType = type;
 			}
@@ -202,7 +204,7 @@
 					url: url,//请求的地址
 				}
 				$http(req).then(function success(data) {
-					$scope.WeaponDataList_A = data.data.values;					
+					$scope.WeaponDataList_A = data.data.values;
 				}).catch(function error(data) {
 					$scope.WeaponDataList_A = [];
 				})
@@ -236,19 +238,19 @@
 					$http(req).then(function success(data) {
 						tmpCount++;
 						$scope.WikiDataList.push(data.data.values);
-						if(tmpCount ==$scope.WikiLength)
+						if (tmpCount == $scope.WikiLength)
 							$scope.GetEvaluateTable('A');
 					}).catch(function error(data) {
 						$scope.WikiDataList[i] = [];
 					})
 				}
 				HideProgressBar();
-				
+
 				//#endregion
-					
+
 			}
 			$scope.GetEvaluateTable = function (type) {
-				switch(type){
+				switch (type) {
 					case 'A': CalEvaluateTable($scope.WeaponDataList_A);
 						break;
 					case 'B': CalEvaluateTable($scope.WeaponDataList_B);
@@ -267,13 +269,13 @@
 					$scope.EvaluateTable = [];
 					$scope.UpWeapon = "";
 					$scope.UpStigmata = "";
-					
+
 					for (var index = 2; index < Data.length; index++) {
 						$scope.UpWeapon = Data[2][1];
-						$scope.UpStigmata = Data[2][2];					
+						$scope.UpStigmata = Data[2][2];
 						for (var i = 0; i < $scope.WikiDataList.length; i++) {
 							//#region 先處理武器
-							if (Data[index][0] == $scope.WikiDataList[i][0][0]) {							
+							if (Data[index][0] == $scope.WikiDataList[i][0][0]) {
 								for (var j = 1; j < $scope.WikiDataList[i].length; j++) {
 									if (Data[index][1] == $scope.WikiDataList[i][j][0]) {
 										//console.log($scope.WikiDataList[i][0][0] + "  " + $scope.WikiDataList[i][j][0] + "  " + $scope.WikiDataList[i][j][1]);
@@ -284,27 +286,30 @@
 
 										if (BestEquipRegex.test($scope.WikiDataList[i][j][1])) {
 											$scope.BestEquipTable.push(tmp);
+											$scope.Probability_BestEquip += parseFloat(Probability);
 										}
 										if (UniqueEquipRegex.test($scope.WikiDataList[i][j][1])) {
 											$scope.UniqueEquipTable.push(tmp);
+											$scope.Probability_UniqueEquip += parseFloat(Probability);
 										}
 										if (WorseEquipRegex.test($scope.WikiDataList[i][j][1])) {
 											$scope.WorseEquipTable.push(tmp);
+											$scope.Probability_WorseEquip += parseFloat(Probability);
 										}
 										break;
 									}
-								}								
+								}
 							}
 							//#endregion
 							//#region 處理聖痕
 							if ($scope.WikiDataList[i][0][0] == "聖痕") {
 								for (var j = 1; j < $scope.WikiDataList[i].length; j++) {
 									if (Data[index][2] == $scope.WikiDataList[i][j][0]) {
-										console.log($scope.WikiDataList[i][0][0] + "  " + $scope.WikiDataList[i][j][0] + "  " + $scope.WikiDataList[i][j][1]+"  " + $scope.WikiDataList[i][j][2]+"  " + $scope.WikiDataList[i][j][3]);
+										//console.log($scope.WikiDataList[i][0][0] + "  " + $scope.WikiDataList[i][j][0] + "  " + $scope.WikiDataList[i][j][1] + "  " + $scope.WikiDataList[i][j][2] + "  " + $scope.WikiDataList[i][j][3]);
 										var Probability = "2.5%";
 										for (var k = 1; k <= 3; k++) {
 											var Evaluation = $scope.WikiDataList[i][j][k];
-											if (Evaluation == $scope.UpStigmata)
+											if ($scope.WikiDataList[i][j][0] == $scope.UpStigmata)
 												Probability = "10%";
 											var Part;
 											switch (k) {
@@ -318,16 +323,19 @@
 													Part = "(下)";
 													break;
 											}
-											var tmp = [$scope.WikiDataList[i][j][0]+Part, Probability];
+											var tmp = [$scope.WikiDataList[i][j][0] + Part, Probability];
 
 											if (BestEquipRegex.test(Evaluation)) {
 												$scope.BestEquipTable.push(tmp);
+												$scope.Probability_BestEquip += parseFloat(Probability);
 											}
 											if (UniqueEquipRegex.test(Evaluation)) {
 												$scope.UniqueEquipTable.push(tmp);
+												$scope.Probability_UniqueEquip += parseFloat(Probability);
 											}
 											if (WorseEquipRegex.test(Evaluation)) {
 												$scope.WorseEquipTable.push(tmp);
+												$scope.Probability_WorseEquip += parseFloat(Probability);
 											}
 										}
 										break;
@@ -337,28 +345,47 @@
 							//#endregion
 						}
 					}
-					var MaxLength = Math.max($scope.BestEquipTable.length, $scope.UniqueEquipTable.length, $scope.WorseEquipTable.length);					
+					var MaxLength = Math.max($scope.BestEquipTable.length, $scope.UniqueEquipTable.length, $scope.WorseEquipTable.length);
 					for (var i = 0; i < MaxLength; i++) {
-						//var Tmp = [$scope.BestEquipTable[i], $scope.UniqueEquipTable[i], $scope.WorseEquipTable[i]];
 						var Tmp = [];
 						if ($scope.BestEquipTable[i] != null)
 							Tmp = Tmp.concat($scope.BestEquipTable[i]);
 						else
-							Tmp = Tmp.concat("","");
+							Tmp = Tmp.concat("", "");
 						if ($scope.UniqueEquipTable[i] != null)
 							Tmp = Tmp.concat($scope.UniqueEquipTable[i]);
 						else
-							Tmp = Tmp.concat("","");
-						if ($scope.WorseEquipTable[i] !=null)
+							Tmp = Tmp.concat("", "");
+						if ($scope.WorseEquipTable[i] != null)
 							Tmp = Tmp.concat($scope.WorseEquipTable[i]);
 						else
-							Tmp = Tmp.concat("","");
+							Tmp = Tmp.concat("", "");
 
 						$scope.EvaluateTable.push(Tmp);
 					}
-					var Tmp = ["泛用", "機率", "專屬", "機率", "炸裂", "機率"];
+					$scope.Probability_BestEquip = Math.round($scope.Probability_BestEquip * 10) / 10;
+					$scope.Probability_UniqueEquip = Math.round($scope.Probability_UniqueEquip * 10) / 10;
+					$scope.Probability_WorseEquip = Math.round($scope.Probability_WorseEquip * 10) / 10;
+					var Tmp = ["泛用", $scope.Probability_BestEquip + "%",
+							   "專屬", $scope.Probability_UniqueEquip + "%",
+							   "炸裂", $scope.Probability_WorseEquip + "%"];
 					$scope.EvaluateTable.unshift(Tmp);
 				}
+				$scope.GetEvaluationScore();
+				$scope.DrowCanvas();
+			}
+			$scope.GetEvaluationScore = function () {
+				var DataArray = [];
+				$scope.Score = $scope.Probability_BestEquip + $scope.Probability_UniqueEquip / 3;
+				$scope.Score = Math.round($scope.Score * 10) / 10;
+				DataArray.push("評價" + $scope.Score + "%");
+				DataArray.push("計算方式：泛用 + 專屬 / 3");
+				DataArray.push("S (>70%)：存夠久的鑽可以抽了");
+				DataArray.push("A (55~70)：手癢可以抽");
+				DataArray.push("B (40~55)：手癢要天人交戰一下");
+				DataArray.push("C (25~40)：手癢也不太建議抽");
+				DataArray.push("D (<25%)：毒池一個，省鑽周");
+				$scope.EvaluationScore = DataArray;
 			}
 			$scope.TableSize_Controller = function () {
 				$scope.TdStyle = { 'Height': $scope.SliderValue * 5 };
@@ -367,6 +394,9 @@
 			$scope.UpColor = function (index) {
 				if (index == 2)
 					return 'aqua';
+			}
+			$scope.ScoreColor = function (index) {
+				
 			}
 			$scope.SwitchPrecision = function (type) {
 				switch (type) {
@@ -377,6 +407,34 @@
 						$scope.GetEvaluateTable('B');
 						break;
 				}
+			}
+			$scope.RandomColor = function () {
+				var letters = '0123456789ABCDEF'.split('');
+				var color = '#';
+				for (var j = 0; j < 6; j++) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				return color;
+			}
+			$scope.DrowCanvas = function (){
+				$('#canvas').remove(); // 刪除canvas重繪解決閃爍問題
+				$('#canvasDiv').append('<canvas id="canvas"></canvas>');
+				var labels = ["泛用","專屬","炸裂"];
+				var dataArr = [$scope.Probability_BestEquip, $scope.Probability_UniqueEquip, $scope.Probability_WorseEquip];
+				var colorArr = [$scope.RandomColor(), $scope.RandomColor(), $scope.RandomColor()];
+
+				var ctx = document.getElementById("canvas").getContext("2d");
+				$scope.Chart = new Chart(ctx, {  //先建立一個 chart
+					type: 'pie', // 圖表類型
+					data: {
+						labels: labels, // 標題
+						datasets: [{
+							label: labels, // 標籤
+							data: dataArr, // 資料
+							backgroundColor: colorArr,
+						}]
+					},
+				});
 			}
 		})
 	</script>
