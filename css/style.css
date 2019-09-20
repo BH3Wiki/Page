@@ -4367,7 +4367,7 @@ input[type="button"].btn-block {
   -ms-flex: 1;
   flex: 1; }
 
-.list-group {
+/*.list-group {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -4376,7 +4376,7 @@ input[type="button"].btn-block {
   -ms-flex-direction: column;
   flex-direction: column;
   padding-left: 0;
-  margin-bottom: 0; }
+  margin-bottom: 0; }*/
 
 .list-group-item-action {
   width: 100%;
@@ -9988,4 +9988,12 @@ textarea.form-control {
 
 	.Margin-L {
 		margin-left: 10px;
+	}
+	.Margin-R {
+		margin-right: 10px;
+	}
+	.MBIcon{
+		width:50%;
+		height:100px;
+		margin:auto;
 	}

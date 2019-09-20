@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="css/flaticon.css">
 	<link rel="stylesheet" href="css/icomoon.css">
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="shortcut icon" href="https://gamepedia.cursecdn.com/honkaiimpact3_gamepedia_en/6/64/Favicon.ico?version=327fc4e29f56a6d5161ab6f2b74b2e8d&amp;version=327fc4e29f56a6d5161ab6f2b74b2e8d" />
 
 </head>
 <body ng-app="App" ng-controller="AppController" ng-init="GetValue();">
@@ -32,16 +33,16 @@
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item active"><a href="index.html" class="nav-link" style="color:white">Home</a></li>
-					<li class="nav-item"><a href="MeasureTable.html" class="nav-link" style="color:white">Table</a></li>
-					<li class="nav-item"><a href="about.html" class="nav-link" style="color:white">About</a></li>
-					<li class="nav-item"><a href="contact.html" class="nav-link" style="color:white">Contact</a></li>
+					<li class="nav-item"><a href="MeasureTable.html" class="nav-link" style="color:white">精準表</a></li>
+					<li class="nav-item"><a href="MemorialArena.html" class="nav-link" style="color:white">記憶戰場</a></li>
+					<li class="nav-item"><a href="DataBase.html" class="nav-link" style="color:white">資料庫</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 	<!-- END nav -->
 
-	<section class="hero-wrap hero-wrap-2 ftco-degree-bg js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+	<section class="hero-wrap hero-wrap-2 ftco-degree-bg js-fullheight" style="background-image: url('images/Background/bg_MeasureTable.jpg');" data-stellar-background-ratio="0.5">
 		<div class="overlay"></div>
 		<div class="container">
 			<div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
@@ -83,12 +84,12 @@
 					<!--評價分數建議表-->
 					<table class="table table-bordered table-striped text-center">
 						<tr ng-repeat="x in EvaluationScore" style="margin:auto;background-color:{{ScoreColor($index)}}">
-							<td>{{x}}</td>
+							<td><font size="{{TableTextSize}}">{{x}}</font></td>
 						</tr>
 					</table>
 					<!--餅圖-->
 					<div class="text-center">
-						<div id="canvasDiv" style="width:600px;height:600px;margin:auto;">
+						<div id="canvasDiv" style="width:600px;height:600px;">
 							<canvas id="canvas"></canvas>
 						</div>
 					</div>
@@ -108,11 +109,11 @@
 		</div>
 	</section>
 
-	<!--�pô�ڭ�-->
+	<!--About-->
 	<footer class="ftco-footer ftco-section">
 		<div class="container">
 			<div class="row mb-5">
-				<div class="col-md">
+				<div class="col-md-3">
 					<div class="ftco-footer-widget mb-4">
 						<h2 class="ftco-heading-2">BH3Wiki</h2>
 						<p>test.</p>
@@ -122,7 +123,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-md">
+				<div class="col-md-3">
 					<div class="ftco-footer-widget mb-4 ml-md-4">
 						<h2 class="ftco-heading-2">Community</h2>
 						<ul class="list-unstyled">
@@ -131,7 +132,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-md">
+				<div class="col-md-3">
 					<div class="ftco-footer-widget mb-4 ml-md-4">
 						<h2 class="ftco-heading-2">About Us</h2>
 						<ul class="list-unstyled">
@@ -140,7 +141,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-md">
+				<div class="col-md-3">
 					<div class="ftco-footer-widget mb-4">
 						<h2 class="ftco-heading-2">Have a Questions?</h2>
 						<div class="block-23 mb-3">
@@ -440,6 +441,16 @@
 							backgroundColor: colorArr,
 						}]
 					},
+					options: {
+						layout: {
+							padding: {
+								left: 0,
+								right: 50,
+								top: 0,
+								bottom: 0
+							}
+						}
+					}
 				});
 			}
 			var Check = setTimeout(ReGetApi, 1000);
