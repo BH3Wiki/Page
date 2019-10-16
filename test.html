@@ -10,7 +10,7 @@
 <body ng-app="App" ng-controller="AppController">
 	<div class="row">
 		<div class="col-md-12">
-			<button href="fb://myfacepage/" target="_blank" rel="alternate">Call App</button>
+			<button ng-click="CallAPP()">Call Google play App</button>
 		</div>
 	</div>
 </body>
@@ -22,14 +22,7 @@
 	var app = angular.module('App', []);
 	app.controller('AppController', function ($scope, $http) {
 		$scope.CallAPP = function () {
-			window.fbAsyncInit = function () {
-				FB.init({
-					appId: 'your-app-id',
-					autoLogAppEvents: true,
-					xfbml: true,
-					version: 'v4.0'
-				});
-			};
+			location.href = "https://play.google.com/store/apps/details?id=com.a.one.nnww";
 		}
 	})
 </script>
