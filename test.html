@@ -10,14 +10,14 @@
 <body ng-app="App" ng-controller="AppController">
 	<div class="row">
 		<div class="col-md-12">
-			<button ng-click="CallAPP()">Call App</button>
+			<button href="fb://myfacepage/" target="_blank" rel="alternate">Call App</button>
 		</div>
 	</div>
 </body>
 </html>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.min.js"></script>
-<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+
 <script>
 	var app = angular.module('App', []);
 	app.controller('AppController', function ($scope, $http) {
