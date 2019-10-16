@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+	<meta charset="big5">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<link rel="shortcut icon" href="https://gamepedia.cursecdn.com/honkaiimpact3_gamepedia_en/6/64/Favicon.ico?version=327fc4e29f56a6d5161ab6f2b74b2e8d&amp;version=327fc4e29f56a6d5161ab6f2b74b2e8d" />
+</head>
+<body ng-app="App" ng-controller="AppController">
+	<div class="row">
+		<div class="col-md-12">
+			<button ng-click="CallAPP()">Call App</button>
+		</div>
+	</div>
+</body>
+</html>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+<script>
+	var app = angular.module('App', []);
+	app.controller('AppController', function ($scope, $http) {
+		$scope.CallAPP = function () {
+			window.fbAsyncInit = function () {
+				FB.init({
+					appId: 'your-app-id',
+					autoLogAppEvents: true,
+					xfbml: true,
+					version: 'v4.0'
+				});
+			};
+		}
+	})
+</script>
