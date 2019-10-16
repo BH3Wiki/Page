@@ -4,32 +4,47 @@
 	<meta charset="big5">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-
+	<script src="Scripts/Angular/angular.js"></script>
+	<script src="Scripts/Angular/angular-route.js"></script>
+	<script src="Scripts/jquery/jquery-3.4.0.min.js"></script>
 	<link rel="shortcut icon" href="https://gamepedia.cursecdn.com/honkaiimpact3_gamepedia_en/6/64/Favicon.ico?version=327fc4e29f56a6d5161ab6f2b74b2e8d&amp;version=327fc4e29f56a6d5161ab6f2b74b2e8d" />
 </head>
 <body ng-app="App" ng-controller="AppController">
 	<div class="row">
 		<div class="col-md-12">
-			<button ng-click="CallAPP()">Call App</button>
+			<a href="intent://npfb://whatever#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
+			<a href="intent://whatever#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
+			<a href="intent://npfb#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
+			<a href="intent://nnww#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
+			
+			<a href="intent:https://com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>		
+			<a href="intent:play.google.com/store/apps/details?id=com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>		
+			<a href="intent://play.google.com/store/apps/details?id=com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>		
+			<a href="intent://https://play.google.com/store/apps/details?id=com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>	
+			<a href="nnww://app"> Start app  </a>
 		</div>
 	</div>
 </body>
 </html>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.min.js"></script>
-<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+
 <script>
 	var app = angular.module('App', []);
+	var WhatSystem = navigator.userAgent;
 	app.controller('AppController', function ($scope, $http) {
 		$scope.CallAPP = function () {
-			window.fbAsyncInit = function () {
-				FB.init({
-					appId: 'your-app-id',
-					autoLogAppEvents: true,
-					xfbml: true,
-					version: 'v4.0'
-				});
-			};
+			window.location = ("intent:npfb#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
+
+		}
+		$scope.CallAPP2 = function () {
+			window.location = ("intent://whatever/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
+		}
+		$scope.CallAPP3 = function () {
+			window.location = ("intent://npfb/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
+		}
+		$scope.CallAPP4 = function () {
+			window.location = ("intent://npfb://whatever/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
 		}
 	})
 </script>
