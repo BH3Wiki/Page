@@ -13,6 +13,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<button ng-click="CallAPP()">Call Shop App</button>
+			<button ng-click="CallAPP2()">Call Shop App2</button>
 		</div>
 	</div>
 </body>
@@ -35,6 +36,9 @@
 				//location.href = "https://itunes.apple.com/us/app/id1474932763";
 			//}
 
+		}
+		$scope.CallAPP2 = function () {
+			window.location = ("intent://scan/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
 		}
 	})
 </script>
