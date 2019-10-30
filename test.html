@@ -15,6 +15,7 @@
 			<button ng-click="CallAPP()">Call Shop App</button>
 			<button ng-click="CallAPP2()">Call Shop App2</button>
 			<button ng-click="CallAPP3()">Call Shop App3</button>
+			<button ng-click="CallAPP4()">Call Shop App4</button>
 		</div>
 	</div>
 </body>
@@ -35,6 +36,9 @@
 		}
 		$scope.CallAPP3 = function () {
 			window.location = ("intent://npfb/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
+		}
+		$scope.CallAPP4 = function () {
+			window.location = ("intent://npfb://whatever/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
 		}
 	})
 </script>
