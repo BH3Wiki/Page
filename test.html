@@ -28,8 +28,8 @@
 			if(WhatSystem.match(/android/i)){
 				//是 Android 的話要做什麼事
 				//location.href = "https://play.google.com/store/apps/details?id=com.a.one.nnww";
-				location.href = "npfb://whatever";
-			}else if(WhatSystem.match(/(iphone|ipad|ipod)?/i)){
+				window.location="npfb://whatever";			
+				}else if(WhatSystem.match(/(iphone|ipad|ipod)?/i)){
 				//是 iOS 的話要做什麼事
 				location.href = "https://itunes.apple.com/us/app/id1474932763";
 			}
