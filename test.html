@@ -25,14 +25,15 @@
 	var WhatSystem = navigator.userAgent;
 	app.controller('AppController', function ($scope, $http) {
 		$scope.CallAPP = function () {
-			if(WhatSystem.match(/android/i)){
+			//if(WhatSystem.match(/android/i)){
 				//是 Android 的話要做什麼事
-				location.href = "https://play.google.com/store/apps/details?id=com.a.one.nnww";
-				//window.location="npfb://whatever";			
-				}else if(WhatSystem.match(/(iphone|ipad|ipod)?/i)){
+				//location.href = "https://play.google.com/store/apps/details?id=com.a.one.nnww";
+				window.location="npfb://whatever";			
+			//
+			//else if(WhatSystem.match(/(iphone|ipad|ipod)?/i)){
 				//是 iOS 的話要做什麼事
-				location.href = "https://itunes.apple.com/us/app/id1474932763";
-			}
+				//location.href = "https://itunes.apple.com/us/app/id1474932763";
+			//}
 
 		}
 	})
