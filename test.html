@@ -11,17 +11,8 @@
 </head>
 <body ng-app="App" ng-controller="AppController">
 	<div class="row">
-		<div class="col-md-12">
-			<a href="intent://npfb://whatever#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
-			<a href="intent://whatever#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
-			<a href="intent://npfb#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
-			<a href="intent://nnww#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end;">Start app</a>		
-			
-			<a href="intent:https://com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>		
-			<a href="intent:play.google.com/store/apps/details?id=com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>		
-			<a href="intent://play.google.com/store/apps/details?id=com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>		
+		<div class="col-md-12">	
 			<a href="intent://https://play.google.com/store/apps/details?id=com.a.one.nnww#Intent;scheme=https://com.a.one.nnww;package=com.a.one.nnww;end;">Start app</a>	
-			<a href="nnww://app"> Start app  </a>
 		</div>
 	</div>
 </body>
@@ -33,18 +24,5 @@
 	var app = angular.module('App', []);
 	var WhatSystem = navigator.userAgent;
 	app.controller('AppController', function ($scope, $http) {
-		$scope.CallAPP = function () {
-			window.location = ("intent:npfb#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
-
-		}
-		$scope.CallAPP2 = function () {
-			window.location = ("intent://whatever/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
-		}
-		$scope.CallAPP3 = function () {
-			window.location = ("intent://npfb/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
-		}
-		$scope.CallAPP4 = function () {
-			window.location = ("intent://npfb://whatever/#Intent;scheme=npfb://whatever;package=com.a.one.nnww;end");
-		}
 	})
 </script>
